@@ -1,20 +1,19 @@
-require('dotenv').config();
-
 const { Pool } = require('pg');
+
+// Use full DATABASE_URL instead of splitting fields
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: parseInt(process.env.DB_PORT),
-})
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production'
+    ? { rejectUnauthorized: false } // needed on Render
+    : false // no SSL for local dev
+});
 
 pool.on('connect', () => {
-    console.log('Connected to PostgreSQL database')
+  console.log('✅ Connected to PostgreSQL database');
 });
 
 pool.on('error', (err) => {
-    console.error('Unexpected error on idle client',err);
+  console.error('❌ Unexpected error on idle client', err);
 });
 
 module.exports = pool;

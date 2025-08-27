@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const pool = require("./config/database");
 const blogRoutes = require("./routes/blogRoutes");
 const app = express();
+const migrate = require('./migrate');
 
 const testConnection = async () => {
   try {
@@ -12,7 +13,7 @@ const testConnection = async () => {
     console.log("✓ Database connected at:", result.rows[0].now);
   } catch (err) {
     console.error("✗ Database connection failed:", err.message);
-    process.exit(1);
+    throw err;
   }
 };
 
@@ -42,10 +43,19 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-testConnection().then(() => {
+// Start server with migration
+const startServer = async () => {
+  try {
+    await testConnection();
+    await migrate();
+    
     app.listen(PORT, () => {
-        console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
-}).catch((err) => {
-    console.error('Failed to start server:', err.message);
-});
+  } catch (err) {
+    console.error('❌ Failed to start server:', err.message);
+    process.exit(1);
+  }
+};
+
+startServer();

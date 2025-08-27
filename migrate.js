@@ -1,7 +1,9 @@
-const pool = require("./config/database"); // adjust if your pool file has a different name
+const pool = require("./config/database");
 
 async function migrate() {
   try {
+    console.log('🔄 Running database migration...');
+    
     await pool.query(`
       CREATE TABLE IF NOT EXISTS blogs (
         id SERIAL PRIMARY KEY,
@@ -33,11 +35,20 @@ async function migrate() {
       console.log(`ℹ️ Blogs table already has ${count} rows. Skipping seed.`);
     }
 
-    process.exit(0);
+    // Don't close the pool here, let the server use it
+    console.log('✅ Migration completed successfully');
+    
   } catch (err) {
     console.error('❌ Migration failed', err);
     process.exit(1);
   }
 }
 
-migrate();
+// Only run migration if this file is called directly
+if (require.main === module) {
+  migrate().then(() => {
+    process.exit(0);
+  });
+}
+
+module.exports = migrate;

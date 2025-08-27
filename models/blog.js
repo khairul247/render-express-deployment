@@ -33,7 +33,7 @@ class Blog {
     const { title, snippet, body } = blogData;
     const query = `
     UPDATE blogs
-    SET title = $1, snippet =$2, body = &3, updated_at = CURRENT_TIMESTAMP
+    SET title = $1, snippet =$2, body = $3, updated_at = CURRENT_TIMESTAMP
     where id = $4
     RETURNING *`;
     const result = await pool.query(query, [title, snippet, body, id]);

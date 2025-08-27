@@ -1,4 +1,4 @@
-const pool = require('./db'); // adjust if your pool file has a different name
+const pool = require("./config/database"); // adjust if your pool file has a different name
 
 async function migrate() {
   try {

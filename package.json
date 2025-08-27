@@ -1,13 +1,13 @@
 {
   "name": "crash-course",
   "version": "1.0.0",
-  "main": "files.js",
+  "main": "server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node migrate.js && node app.js",
+    "dev": "nodemon server.js",
+    "start": "node migrate.js && node server.js",
     "migrate": "node migrate.js"
   },
   "author": "",
